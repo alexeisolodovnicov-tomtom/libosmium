@@ -100,12 +100,6 @@ namespace osmium {
              * @param value Tag value (0-terminated string).
              */
             void add_tag(const char* key, const char* value) {
-                if (std::strlen(key) > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag key is too long"};
-                }
-                if (std::strlen(value) > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag value is too long"};
-                }
                 add_size(append(key));
                 add_size(append(value));
             }
@@ -119,12 +113,6 @@ namespace osmium {
              * @param value_length Length of value (not including the \0 byte).
              */
             void add_tag(const char* key, const std::size_t key_length, const char* value, const std::size_t value_length) {
-                if (key_length > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag key is too long"};
-                }
-                if (value_length > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag value is too long"};
-                }
                 add_size(append_with_zero(key,   static_cast<osmium::memory::item_size_type>(key_length)));
                 add_size(append_with_zero(value, static_cast<osmium::memory::item_size_type>(value_length)));
             }
@@ -136,12 +124,6 @@ namespace osmium {
              * @param value Tag value.
              */
             void add_tag(const std::string& key, const std::string& value) {
-                if (key.size() > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag key is too long"};
-                }
-                if (value.size() > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM tag value is too long"};
-                }
                 add_size(append(key.data(),   static_cast<osmium::memory::item_size_type>(key.size())   + 1));
                 add_size(append(value.data(), static_cast<osmium::memory::item_size_type>(value.size()) + 1));
             }
@@ -234,12 +216,8 @@ namespace osmium {
              *               will be set.
              * @param role The role.
              * @param length Length of role (without \0 termination).
-             * @throws std:length_error If role is longer than osmium::max_osm_string_length
              */
             void add_role(osmium::RelationMember& member, const char* role, const std::size_t length) {
-                if (length > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM relation member role is too long"};
-                }
                 member.set_role_size(static_cast<osmium::string_size_type>(length) + 1);
                 add_size(append_with_zero(role, static_cast<osmium::memory::item_size_type>(length)));
                 add_padding(true);
@@ -277,8 +255,6 @@ namespace osmium {
              * @param full_member Optional pointer to the member object. If it
              *                    is available a copy will be added to the
              *                    relation.
-             * @throws std:length_error If role_length is greater than
-             *         osmium::max_osm_string_length
              */
             void add_member(osmium::item_type type, object_id_type ref, const char* role, const std::size_t role_length, const osmium::OSMObject* full_member = nullptr) {
                 auto* member = reserve_space_for<osmium::RelationMember>();
@@ -299,7 +275,6 @@ namespace osmium {
              * @param full_member Optional pointer to the member object. If it
              *                    is available a copy will be added to the
              *                    relation.
-             * @throws std:length_error If role is longer than osmium::max_osm_string_length
              */
             void add_member(osmium::item_type type, object_id_type ref, const char* role, const osmium::OSMObject* full_member = nullptr) {
                 add_member(type, ref, role, std::strlen(role), full_member);
@@ -314,7 +289,6 @@ namespace osmium {
              * @param full_member Optional pointer to the member object. If it
              *                    is available a copy will be added to the
              *                    relation.
-             * @throws std:length_error If role is longer than osmium::max_osm_string_length
              */
             void add_member(osmium::item_type type, object_id_type ref, const std::string& role, const osmium::OSMObject* full_member = nullptr) {
                 add_member(type, ref, role.data(), role.size(), full_member);
@@ -327,9 +301,6 @@ namespace osmium {
             osmium::ChangesetComment* m_comment = nullptr;
 
             void add_user(osmium::ChangesetComment& comment, const char* user, const std::size_t length) {
-                if (length > osmium::max_osm_string_length) {
-                    throw std::length_error{"OSM user name is too long"};
-                }
                 comment.set_user_size(static_cast<osmium::string_size_type>(length) + 1);
                 add_size(append_with_zero(user, static_cast<osmium::memory::item_size_type>(length)));
             }

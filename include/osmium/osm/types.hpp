@@ -34,6 +34,7 @@ DEALINGS IN THE SOFTWARE.
 */
 
 #include <cstdint>
+#include <limits>
 
 namespace osmium {
 
@@ -64,11 +65,6 @@ namespace osmium {
      * OSM changesets, hopefully 32 bit is.
      */
     using changeset_comment_size_type = uint32_t;
-
-    /// Maximum of 256 characters of max 4 bytes each (in UTF-8 encoding)
-    enum {
-        max_osm_string_length = 256 * 4
-    };
 
 } // namespace osmium
 
